@@ -1,0 +1,39 @@
+$color: red;
+$bc: #b9b1b1;
+$formColor: #ffffff;
+$formMaxWidth: 400px;
+$formMinHeight: 530px;
+
+.container-fluid {
+   background-color: $bc;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+}
+.login-form {
+   border-radius: 10px;
+   border: 1px solid rgb(197, 194, 194);
+   max-width: $formMaxWidth;
+   padding-top: 2rem;
+   background-color: $formColor;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+}
+.role {
+   margin-bottom: 1rem;
+   display: flex !important;
+   justify-content: center;
+}
+.submit-btn {
+   width: 100%;
+   background-color: #8D92C5 !important;
+   border-color: #8D92C5 !important;
+}
+
+.form-footer{
+   margin-top: 1rem;
+}

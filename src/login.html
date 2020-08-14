@@ -1,0 +1,32 @@
+@@include('parts/header.html')
+
+<div class="container-fluid">
+  <div class="col-md-6 login-form">
+    <h3 class="enter">Войти</h3>
+    <div class="btn-group role" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-link link">Я клиент</button>
+      <button type="button" class="link btn btn-link">Я специалист</button>
+    </div>
+    <form class="col-md-10" > 
+      <div class="form-group">
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Телефон или email">
+        <small id="emailError" class="form-text text-muted">ошибка валидации</small>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль">
+        <small id="passwordError" class="form-text text-muted">ошибка валидации</small>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Запомнить меня</label>
+      </div>
+      <button type="submit" class="btn btn-primary submit-btn">Войти</button>
+    </form>
+    <div>
+      <p class="form-footer">Нет аккаунта? <a href="#">Зарегистрируйтесь</a></p>
+    </div>
+  </div>
+  
+</div>
+
+@@include('parts/footer.html')
