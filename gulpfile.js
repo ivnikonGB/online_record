@@ -7,6 +7,7 @@ const htmlmin = require('gulp-htmlmin')
 const autoPrefixer = require('gulp-autoprefixer')
 const sync = require('browser-sync').create()
 const concat = require('gulp-concat')
+const image = require('gulp-image')
 
 
 function html() {
@@ -28,6 +29,22 @@ function scss() {
       .pipe(concat('enter.css'))
       .pipe(dest('dist'))
 }
+ 
+function img() {
+   return src('src/img/*')
+      .pipe(image({
+         pngquant: true,
+         optipng: false,
+         zopflipng: true,
+         jpegRecompress: false,
+         mozjpeg: true,
+         gifsicle: true,
+         svgo: true,
+         concurrent: 10,
+         quiet: true
+      }))
+      .pipe(dest('dist/img'))
+}
 
 function clear() {
    return del('dist')
@@ -42,7 +59,7 @@ function serve() {
 
 }
 
-exports.build = series(clear, scss, html)
-exports.serve = series(clear, html, scss, serve)
+exports.build = series(clear, scss, html, img)
+exports.serve = series(clear, html, scss, img, serve)
 exports.clear = clear
 
