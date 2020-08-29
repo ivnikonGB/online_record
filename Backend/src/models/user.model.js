@@ -28,7 +28,7 @@ Customer.findById = async (customerId, result) => {
 
 //полечение всех мастеров
 Customer.getAllMasters = async result => {
-  const [rows,fields] = await sql.promisePool.query("SELECT * From masters;");
+  const [rows,fields] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as Образование, experience, price, info, citys.city as Город FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
   //console.log("customers: ", rows)
   result(null, rows);
 };
