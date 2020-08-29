@@ -17,7 +17,7 @@ Customer.create = async (newCustomer, result) => {
 
 //карточка мастера
 Customer.findById = async (customerId, result) => {
-  const [rows,fields] = await sql.promisePool.query(`SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as Образование, experience, price, info, citys.city as Город FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id) where masters.id = ${customerId};`);
+  const [rows,fields] = await sql.promisePool.query(`SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id) where masters.id = ${customerId};`);
     if (rows.length) {
       //console.log("found customer: ", rows[0]);
       result(null, rows[0]);
@@ -28,7 +28,7 @@ Customer.findById = async (customerId, result) => {
 
 //полечение всех мастеров
 Customer.getAllMasters = async result => {
-  const [rows,fields] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as Образование, experience, price, info, citys.city as Город FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
+  const [rows,fields] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
   //console.log("customers: ", rows)
   result(null, rows);
 };
