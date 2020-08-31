@@ -3,5 +3,5 @@ module.exports = {
     HOST: "localhost",
     DB: "zakaz",
     USER: "root",
-    PASSWORD: "password"
+    PASSWORD: "2903770"
   };
