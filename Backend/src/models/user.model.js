@@ -1,3 +1,5 @@
+//file version 1.0.1
+
 const sql = require('./db');
 
 const Customer = function(customer) {
@@ -17,21 +19,36 @@ Customer.create = async (newCustomer, result) => {
 
 //карточка мастера
 Customer.findById = async (customerId, result) => {
-  const [rows,fields] = await sql.promisePool.query(`SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id) where masters.id = ${customerId};`);
-    if (rows.length) {
-      //console.log("found customer: ", rows[0]);
-      result(null, rows[0]);
-      return;
-    }
-      result({ kind: "not_found" }, null);
+  const [master,fieldsmaster] = await sql.promisePool.query(`SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id) where masters.id = ${customerId};`);
+  const [joblist,fieldsjoblist] = await sql.promisePool.query(`SELECT group_concat(joblist.title order by joblist.title) as jobs FROM master_joblist INNER JOIN joblist ON (master_joblist.joblist_id=joblist.id) where master_id = ${customerId};`);
+  
+  if (master.length) {
+    master[0].jobs = (joblist[0].jobs).split(',');
+    result(null, master[0]);
+    return;
+  }
+    result({ kind: "not_found" }, null);
 };
 
 //полечение всех мастеров
 Customer.getAllMasters = async result => {
-  const [rows,fields] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
-  //console.log("customers: ", rows)
-  result(null, rows);
+  const [masters,fieldsmasters] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
+  const [joblists,fieldsjoblist] = await sql.promisePool.query(`SELECT master_id, group_concat(joblist.title order by joblist.title) as jobs FROM master_joblist INNER JOIN joblist ON (master_joblist.joblist_id=joblist.id) group by master_id;`);
+  if (masters.length && joblists.length) {
+    for (var master of masters) {
+      for (var joblist of joblists) {
+        if (master.id === joblist.master_id){
+          master.jobs = (joblist.jobs).split(',');
+        };
+      };
+    };
+    result(null, masters);
+    return;
+  };
 };
+
+
+
 //полечение всех городов
 Customer.getAllCitys = async result => {
   const [rows,fields] = await sql.promisePool.query("SELECT * From citys ORDER by id;");
@@ -43,11 +60,9 @@ Customer.getAllCategory = async result => {
   const [cats,fieldscat] = await sql.promisePool.query("SELECT * FROM category order by id;");
   const [jobs,fieldsjob] = await sql.promisePool.query("SELECT * FROM joblist order by id;");
     for (var cat of cats) {
-      catId = cat.id;
       cat.jobs = [];
       for(var job of jobs){
-        jobCatId = job.category_id;
-        if (catId === jobCatId){
+        if (cat.id === job.category_id){
             cat.jobs.push(job);
         };
       };
