@@ -15,6 +15,12 @@ Vue.use(VueRouter)
     path: '/category2',
     name: 'category2',
     component: category2
+  },
+  {
+    path: "/details/:id",
+    name: "details",
+    component: () =>
+      import("../views/MasterDetails.vue"),
   }
 ]
 
