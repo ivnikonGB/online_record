@@ -5,7 +5,7 @@
       <div class="navbar-menu">
         <ul class="menu-nav ">
           <li class="menu-list">
-            <a class="menu-link" href="#">Главная</a>        
+            <router-link class="menu-link" to="/">Главная</router-link>        
           </li> 
           <li class="menu-list">
             <a class="menu-link" href="#">Выход</a>        
