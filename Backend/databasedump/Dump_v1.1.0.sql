@@ -148,7 +148,7 @@ CREATE TABLE `logins` (
 
 LOCK TABLES `logins` WRITE;
 /*!40000 ALTER TABLE `logins` DISABLE KEYS */;
-INSERT INTO `logins` VALUES (1,'1@1','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(2,'2@2','$2a$10$9NYq6.3hV4SGH1X0SfKu0OAGT.Rks36tdA6RkFSiftv7JHjeH8cTK',0,NULL),(3,'3@3','$2a$10$yuy5L3gF1vzSDBwBbz6bPusaLbuG9iv4BwIhoz54ZD0sTRKoSTUnO',1,NULL),(15,'8@8','$2a$10$Y7q3oHWuM.v1DDmZeNLSqu8r.gFoY/t.Hyh8gPZawliqiMPbPeE3K',0,NULL);
+INSERT INTO `logins` VALUES (1,'1@1','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(2,'2@2','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL),(3,'3@3','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(15,'8@8','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL);
 /*!40000 ALTER TABLE `logins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +169,7 @@ CREATE TABLE `master_joblist` (
   KEY `joblist_id_key_idx` (`joblist_id`),
   CONSTRAINT `joblist_id_key` FOREIGN KEY (`joblist_id`) REFERENCES `joblist` (`id`),
   CONSTRAINT `master_id_key` FOREIGN KEY (`master_id`) REFERENCES `masters` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,7 +178,7 @@ CREATE TABLE `master_joblist` (
 
 LOCK TABLES `master_joblist` WRITE;
 /*!40000 ALTER TABLE `master_joblist` DISABLE KEYS */;
-INSERT INTO `master_joblist` VALUES (9,1,5),(10,1,4),(11,1,3),(20,3,1),(21,3,2),(22,3,3);
+INSERT INTO `master_joblist` VALUES (20,3,1),(21,3,2),(22,3,3),(23,1,1),(24,1,4),(25,1,6),(26,1,7),(27,1,8);
 /*!40000 ALTER TABLE `master_joblist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -344,7 +344,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (2,'Петр','Петров',999),(15,'test','tesoff',4);
+INSERT INTO `users` VALUES (2,'Томас','Смит',3),(15,'test','tesoff',4);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,4 +383,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-09 14:16:02
+-- Dump completed on 2020-09-09 22:39:49
