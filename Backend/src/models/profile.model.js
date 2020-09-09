@@ -77,11 +77,10 @@ CustomerSession.getProfile = async (getcustomer, result) => {
 
   //user profile
   UserProfile.updateUser = async (userProfile, result) => {
-    console.log("userProfile",userProfile);
      if(userProfile.role == 0){
          try{
          const [updateUser,fields] = await sql.promisePool.query(`UPDATE users SET firstname = '${userProfile.firstname}', lastname = '${userProfile.lastname}', city_id = '${userProfile.city_id}' WHERE (id = '${userProfile.id}');`);
-         result(null, updateUser[0]);
+         result(null, {message:"Update successful"});
          } catch(e) {
          result({ sqlerror: e}, null);
          return;
@@ -95,11 +94,10 @@ CustomerSession.getProfile = async (getcustomer, result) => {
 
      //master profile
      MasterProfile.updateMaster = async (masterProfile, result) => {
-    console.log("masterProfile",masterProfile);
      if(masterProfile.role == 1){
          try{
          const [updateMaster,fields] = await sql.promisePool.query(`UPDATE masters SET firstname = '${masterProfile.firstname}', lastname = '${masterProfile.lastname}', birthdate = '${masterProfile.birthdate}', city_id = '${masterProfile.city_id}', education_id = '${masterProfile.education_id}', experience = '${masterProfile.experience}', price = '${masterProfile.price}', info = '${masterProfile.info}' WHERE (id = '${masterProfile.id}');`);
-         result(null, updateMaster[0]);
+         result(null, {message:"Update successful"});
          } catch(e) {
          result({ sqlerror: e}, null);
          return;
@@ -114,19 +112,14 @@ CustomerSession.getProfile = async (getcustomer, result) => {
    //master profile
    MasterProfileJobs.updateMasterJobs = async (masterProfileJobs, result) => {
     let sqlJobValues = "";
-    console.log("masterProfile",masterProfileJobs);
-     if(masterProfileJobs.role == 1){
-        console.log(masterProfileJobs.jobs);
-      
+     if(masterProfileJobs.role == 1){ 
         for (job of masterProfileJobs.jobs) {
-            console.log(job);
             sqlJobValues = sqlJobValues + `('${masterProfileJobs.id}', ${job}),`;
         };
-        console.log(sqlJobValues.slice(0, -1));
          try{
             const [removeMasterJobs,fieldsremove] = await sql.promisePool.query(`DELETE FROM master_joblist WHERE (master_id = '${masterProfileJobs.id}');`);
             const [updateMasterJobs,fieldsupdate] = await sql.promisePool.query(`INSERT master_joblist(master_id, joblist_id) VALUES ${sqlJobValues.slice(0, -1)};`);
-            result(null, updateMasterJobs[0]);
+            result(null, {message:"Update successful"});
          } catch(e) {
          result({ sqlerror: e}, null);
          return;

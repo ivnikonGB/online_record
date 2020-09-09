@@ -15,7 +15,7 @@ exports.newUser = (req, res) => {
   Customer.create(customer, (err, data) => {
     if (err){
       if(err.message.includes('Duplicate entry')){
-        res.status(500).send({ message: "User already exist"});
+        res.status(400).send({ message: "User already exist"});
         return;
       } else {
       res.status(500).send({message: err.message || "error" });

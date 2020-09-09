@@ -30,7 +30,12 @@ module.exports = app => {
   
   function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-      return res.redirect('/api/v1/index')
+      if(UI){
+        res.redirect('/api/v1/index');
+      } else{
+        res.status(401).json({ message: "Unauthorized" }); 
+      };  
+      return;
     }
     next()
   };
@@ -55,7 +60,7 @@ module.exports = app => {
         });
       } else {
           if (err) { return next(err); };
-          if (!user) { return res.status(401); };
+          if (!user) { return res.status(401).json(info); };
           req.logIn(user, function(err) {
           if (err) { return next(err); };
           return res.status(200).json(info);
