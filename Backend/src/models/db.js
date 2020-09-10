@@ -1,3 +1,4 @@
+//file version 1.1.0
 async function dbCreatePool() {
   const mysql = require('mysql2');
   const dbconf = require('../config/db.config');
@@ -11,7 +12,7 @@ async function dbCreatePool() {
   });
 
   const promisePool = pool.promise();
-    console.log('[2] - Пул MySQL Создан!');
+    console.log('[2] - MySQL Pool created!');
     exports.promisePool = promisePool;   
 };
 dbCreatePool();
