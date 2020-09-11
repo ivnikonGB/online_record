@@ -1,20 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import category from '../views/category.vue'
-import category2 from '../views/category2.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
+  {
+    path: "/",
+    name: "home",
+    component: () => 
+      import("../views/Home.vue")
+  },
   {
     path: '/category',
     name: 'category',
     component: category
   },
   {
-    path: '/category2',
-    name: 'category2',
-    component: category2
+    path: "/details/:id",
+    name: "details",
+    component: () =>
+      import("../views/MasterDetails.vue"),
   }
 ]
 
