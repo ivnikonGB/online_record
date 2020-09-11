@@ -1,27 +1,38 @@
-//file version 1.0.1
-
+//file version 1.1.0
 const sql = require('./db');
+const bcryptjs = require('bcryptjs');
 
 const Customer = function(customer) {
-    this.firstname = customer.firstname;
-    this.lastname = customer.lastname;
     this.email = customer.email;
-    this.phone = customer.phone;
-    this.city_id = customer.city_id;
     this.pwd = customer.pwd;
+    this.role = customer.role;
 };
 
+
 Customer.create = async (newCustomer, result) => {
-    const [rows,fields] = await sql.promisePool.query("INSERT INTO users SET ?", newCustomer);
-    //console.log("created customer: ", { id: rows.insertId, ...newCustomer });
-    result(null, { id: rows.insertId, ...newCustomer });
+  newCustomer.pwd = await bcryptjs.hash(newCustomer.pwd, 10);
+  let customerObj;
+  try{
+    const [customer,fields] = await sql.promisePool.query("INSERT INTO logins SET ?", newCustomer);
+    console.log(customer);
+    if (newCustomer.role == 0) {
+      const [rowsUser,fields] = await sql.promisePool.query(`INSERT INTO users (id) VALUES (${customer.insertId});`);
+      result(null, { message: "User created" });
+      return;
+    };
+    if (newCustomer.role == 1) {
+      const [rowsMaster,fields] = await sql.promisePool.query(`INSERT INTO masters (id) VALUES (${customer.insertId});`);
+      result(null, { message: "Master created" });
+    };
+  } catch (e){
+    result(e, null);
+  };
 };
 
 //карточка мастера
 Customer.findById = async (customerId, result) => {
-  const [master,fieldsmaster] = await sql.promisePool.query(`SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id) where masters.id = ${customerId};`);
+  const [master,fieldsmaster] = await sql.promisePool.query(`SELECT logins.id, masters.firstname, masters.lastname, citys.city as city, TIMESTAMPDIFF(YEAR,masters.birthdate,CURDATE()) AS age, education.title as education, masters.experience, masters.price, masters.info, photo from logins left join masters using(id) left JOIN citys ON (masters.city_id=citys.id) left JOIN education ON (masters.education_id=education.id) where logins.id = ${customerId};`);
   const [joblist,fieldsjoblist] = await sql.promisePool.query(`SELECT group_concat(joblist.title order by joblist.title) as jobs FROM master_joblist INNER JOIN joblist ON (master_joblist.joblist_id=joblist.id) where master_id = ${customerId};`);
-  
   if (master.length) {
     master[0].jobs = (joblist[0].jobs).split(',');
     result(null, master[0]);
@@ -32,7 +43,7 @@ Customer.findById = async (customerId, result) => {
 
 //полечение всех мастеров
 Customer.getAllMasters = async result => {
-  const [masters,fieldsmasters] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, email, phone, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city FROM masters INNER JOIN citys ON (masters.city_id=citys.id) INNER JOIN education ON (masters.education_id=education.id);");
+  const [masters,fieldsmasters] = await sql.promisePool.query("SELECT masters.id, firstname, lastname, TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age, education.title as education, experience, price, info, citys.city as city, photo FROM masters left JOIN citys ON (masters.city_id=citys.id) left JOIN education ON (masters.education_id=education.id);");
   const [joblists,fieldsjoblist] = await sql.promisePool.query(`SELECT master_id, group_concat(joblist.title order by joblist.title) as jobs FROM master_joblist INNER JOIN joblist ON (master_joblist.joblist_id=joblist.id) group by master_id;`);
   if (masters.length && joblists.length) {
     for (var master of masters) {
@@ -69,4 +80,5 @@ Customer.getAllCategory = async result => {
     }
   result(null, cats);
 };
+
 module.exports = Customer;
