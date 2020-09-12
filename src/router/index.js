@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import category from '../views/category.vue'
-import category2 from '../views/category2.vue'
 
 Vue.use(VueRouter)
 

@@ -1,0 +1,36 @@
+<h1>Register user</h1>
+<form action="/api/v1/profile/masterupdate" method="POST">
+  <div>
+    <label for="firstname">firstname</label>
+    <input type="text" id="firstname" name="firstname" required>
+  </div>
+  <div>
+    <label for="lastname">lastname</label>
+    <input type="text" id="lastname" name="lastname" required>
+  </div>
+  <div>
+    <label for="birthdate">birthdate(1990-01-01)</label>
+    <input type="text" id="birthdate" name="birthdate" required>
+  </div>
+  <div>
+    <label for="city_id">city_id(1-4)</label>
+    <input type="text" id="city_id" name="city_id" required>
+  </div>
+  <div>
+    <label for="education_id">education_id(1-7)</label>
+    <input type="text" id="education_id" name="education_id" required>
+  </div>
+  <div>
+    <label for="experience">experience(0-255)</label>
+    <input type="text" id="experience" name="experience" required>
+  </div>
+  <div>
+    <label for="price">price(text, up to 1024 symbols)</label>
+    <input type="text" id="price" name="price" required>
+  </div>
+  <div>
+    <label for="info">price(text, up to 1024 symbols)</label>
+    <input type="text" id="info" name="info" required>
+  </div>
+  <button type="submit">Save</button>
+</form>
