@@ -2,7 +2,7 @@
   <div id="nav">
       <router-link to="/category">Category</router-link> |
       <router-link to="/category2">Category2</router-link> |
-      <router-link to="/details/1">Master's details</router-link>
+      <router-link to="/details/3">Master's details</router-link>
     </div>
 </template>
 
