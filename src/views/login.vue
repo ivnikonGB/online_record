@@ -4,12 +4,13 @@
         <form action="#">
             <span class="login-title">Авторизация</span>
             <label for="">
-                <input type="text" v-model="login" placeholder="Email" class="login-log">
+                <input type="text" v-model="email" placeholder="Email" class="login-log">
             </label>
             <label for="">
-                <input type="password" v-model="pwd" placeholder="Пароль" class="login-pwd">
+                <input type="password" v-model="password" placeholder="Пароль" class="login-password">
             </label>
-            <a href="#" class="login-In">Войти</a>
+            <div id="login-error"></div>
+            <a href="#" class="login-In" @click="login">Войти</a>
         </form>
       </div>
   </div>
@@ -17,7 +18,21 @@
 
 <script>
 export default {
-
+    data(){
+      return {
+        email: "",
+        password: ""
+      }
+    },
+    methods: {
+      login: function () {
+        let email = this.email 
+        let password = this.password
+        this.$store.dispatch('login', { email, password })
+       .then(() => this.$router.push('/'))
+       .catch(err => console.log(err))
+      }
+    }
 }
 </script>
 
@@ -59,7 +74,7 @@ export default {
         box-sizing: border-box;
         border-radius: 10px;
     }
-    .login-pwd {
+    .login-password {
         outline: none;
         margin-top: 30px;
         padding-left: 15px;
