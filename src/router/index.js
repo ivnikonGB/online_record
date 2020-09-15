@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import category from '../views/category.vue'
+import login from '../views/login.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ Vue.use(VueRouter)
     path: '/category',
     name: 'category',
     component: category
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: login
   },
   {
     path: "/details/:id",
