@@ -23,7 +23,6 @@ Vue.use(VueRouter)
     component: category
   },
   {
-
     path: '/login',
     name: 'login',
     component: login
@@ -32,11 +31,11 @@ Vue.use(VueRouter)
     path: '/register',
     name: 'register',
     component: register
-
+  },
+  {
     path: '/category2',
     name: 'category2',
     component: category2
-
   },
   {
     path: "/details/:id",
