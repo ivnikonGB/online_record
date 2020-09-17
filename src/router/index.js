@@ -5,6 +5,8 @@ import details from '../views/MasterDetails.vue'
 import category from '../views/category.vue'
 import login from '../views/login.vue'
 import register from '../views/register.vue'
+import PageUsers from '../views/PageUsers.vue'
+import PageMasters from '../views/PageMasters.vue'
 
 Vue.use(VueRouter)
 
@@ -13,9 +15,6 @@ Vue.use(VueRouter)
     path: "/",
     name: "home",
     component: home, 
-    meta: { 
-      requiresAuth: true
-    }
   },
   {
     path: '/category',
@@ -33,14 +32,19 @@ Vue.use(VueRouter)
     component: register
   },
   {
-    path: '/category2',
-    name: 'category2',
-    component: category2
-  },
-  {
     path: "/details/:id",
     name: "details",
     component: details
+  },
+  {
+    path: "/page-users",
+    name: "page-users",
+    component: PageUsers,
+  },
+  {
+    path: "/page-masters",
+    name: "page-masters",
+    component: PageMasters,
   }
 ]
 
