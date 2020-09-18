@@ -139,7 +139,7 @@ CREATE TABLE `logins` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `phone_UNIQUE` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +148,7 @@ CREATE TABLE `logins` (
 
 LOCK TABLES `logins` WRITE;
 /*!40000 ALTER TABLE `logins` DISABLE KEYS */;
-INSERT INTO `logins` VALUES (1,'1@1','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(2,'2@2','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL),(3,'3@3','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(15,'8@8','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL);
+INSERT INTO `logins` VALUES (1,'1@1','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(2,'2@2','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL),(3,'3@3','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',1,NULL),(15,'8@8','$2a$10$Q4XkQdC7OHSc0e7.Ro1ZFuYixVIjEMNiPTXqnlav7vfvhX5MbgQJC',0,NULL),(18,'44@44','$2a$10$S9z6ZEM7AlI/5c9pEBdsZOjxdMxaail/ceJ3h14ughjV/huNpW4ny',1,NULL),(19,'55@55','$2a$10$2zHfxsBm.GRTqhHySACP3uCXayzh4imLHB7Y3KnmsF0W/X68eBG9u',1,NULL);
 /*!40000 ALTER TABLE `logins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +204,7 @@ CREATE TABLE `masters` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `citys_key_idx` (`city_id`),
   KEY `edu_keys_idx` (`education_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,7 +213,7 @@ CREATE TABLE `masters` (
 
 LOCK TABLES `masters` WRITE;
 /*!40000 ALTER TABLE `masters` DISABLE KEYS */;
-INSERT INTO `masters` VALUES (1,'Вася','Пупкин','1999-12-22 00:00:00',3,4,99,'ok go','ok go',NULL),(3,'Коля','Пупкин','1990-04-15 00:00:00',1,2,14,'1500 руб за все','Разнорабочий',NULL);
+INSERT INTO `masters` VALUES (1,'Вася','Пупкин','1999-12-22 00:00:00',3,4,99,'ok go','ok go',NULL),(3,'Коля','Пупкин','1990-04-15 00:00:00',1,2,14,'1500 руб за все','Разнорабочий',NULL),(18,NULL,NULL,NULL,999,NULL,NULL,NULL,NULL,NULL),(19,NULL,NULL,NULL,999,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `masters` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,20 +232,20 @@ CREATE TABLE `orders` (
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `accept_date` datetime DEFAULT NULL,
   `finish_date` datetime DEFAULT NULL,
-  `service_type` int DEFAULT NULL,
-  `service_start_date` datetime DEFAULT NULL,
+  `job_id` int DEFAULT NULL,
+  `job_date` datetime DEFAULT NULL,
   `comment` varchar(1024) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idorders_UNIQUE` (`id`),
   KEY `status_key_idx` (`status_id`),
   KEY `user_key_idx` (`user_id`),
   KEY `master_key_idx` (`master_id`),
-  KEY `order_service_type_id_idx` (`service_type`),
-  CONSTRAINT `order_service_type_id` FOREIGN KEY (`service_type`) REFERENCES `joblist` (`id`),
+  KEY `order_service_type_id_idx` (`job_id`),
+  CONSTRAINT `order_service_type_id` FOREIGN KEY (`job_id`) REFERENCES `joblist` (`id`),
   CONSTRAINT `order_user_id_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `oreder_master_id_key` FOREIGN KEY (`master_id`) REFERENCES `masters` (`id`),
   CONSTRAINT `status_key` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +254,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,2,1,2,'2020-08-28 06:16:39','2020-09-07 11:48:03','2020-08-28 19:08:11',1,NULL,'комент'),(2,2,3,2,'2020-08-28 06:38:31','2020-09-07 11:48:03','2020-08-28 19:08:11',22,NULL,'комент'),(3,2,3,2,'2020-08-28 06:38:54','2020-09-07 11:48:03','2020-08-28 19:08:11',22,NULL,'комент'),(4,2,1,5,'2020-08-28 08:17:52','2020-08-28 19:07:27','2020-09-07 11:48:03',1,NULL,'комент');
+INSERT INTO `orders` VALUES (1,2,1,2,'2020-08-28 06:16:39','2020-09-12 14:38:48','2020-08-28 19:08:11',1,'2020-08-30 11:48:03','комент'),(2,2,3,2,'2020-08-28 06:38:31','2020-09-11 23:52:08','2020-08-28 19:08:11',22,'2020-08-27 11:48:03','комент'),(3,2,3,2,'2020-08-28 06:38:54','2020-09-11 23:52:08','2020-08-28 19:08:11',22,'2020-08-28 11:48:03','комент'),(4,2,1,5,'2020-08-28 08:17:52','2020-08-28 19:07:27','2020-09-11 23:52:08',1,'2020-08-29 11:48:03','комент'),(5,2,1,1,'2020-09-11 16:43:06',NULL,NULL,1,'2020-09-07 11:48:03','Стрижка модельная'),(6,2,3,1,'2020-09-11 20:29:32',NULL,NULL,27,'2020-09-18 11:48:03','addComment'),(7,2,3,1,'2020-09-11 20:31:32',NULL,NULL,27,'2020-09-18 15:48:03','Ключ не задан'),(8,2,3,1,'2020-09-11 20:33:23',NULL,NULL,27,'2020-09-25 11:48:03',''),(9,2,3,1,'2020-09-11 20:43:28',NULL,NULL,27,'2020-09-26 11:48:03',NULL),(10,2,3,1,'2020-09-12 22:54:30',NULL,NULL,27,'2020-09-20 15:00:00','Сделать хорошо');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -383,4 +383,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-09 22:39:49
+-- Dump completed on 2020-09-19  0:28:05
