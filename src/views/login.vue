@@ -21,17 +21,43 @@ export default {
     data(){
       return {
         email: "",
-        password: ""
+        password: "",
+        user: {}
       }
     },
     methods: {
-      login: function () {
-        let email = this.email 
-        let password = this.password
-        this.$store.dispatch('login', { email, password })
-       .then(() => this.$router.push('/'))
-       .catch(err => console.log(err))
-      }
+    //   login: function () {
+    //     let email = this.email 
+    //     let password = this.password
+    //     this.$store.dispatch('login', { email, pwd: password })
+    //    .then(() => this.$router.push('/'))
+    //    .catch(err => console.log(err))
+    //   }
+        async login() {
+            let credentials = {
+                email: this.email,
+                pwd: this.password
+            };
+            await fetch("/api/login",
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(credentials)
+            })
+            .then(d => d.json())
+            .then(() => {
+                this.getUserData();
+                this.$router.push('/');
+            })
+            .catch(err => console.log(err));
+        },
+        async getUserData() {
+            this.user = await fetch("/api/profile")
+            .then(d => d.json())
+            .catch(err => console.log(err));
+        }
     }
 }
 </script>
