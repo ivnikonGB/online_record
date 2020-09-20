@@ -1,6 +1,7 @@
 <template>
   <div id="nav">
       <router-link to="/category">Category</router-link> |
+      <router-link to="/details/3">Master's details</router-link> |
       <router-link to="/details/1">Master's details</router-link> |
       <router-link to="/page-users">Page Users</router-link> |
       <router-link to="/page-masters"> Page Masters</router-link> 

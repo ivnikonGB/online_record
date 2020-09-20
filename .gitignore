@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 /dist
-Backend/src/config/db.config.js
-Backend/src/config/server.config.js
+db.config.js
+server.config.js
 
 
 # local env files
@@ -23,3 +23,4 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+Backend/src/config/db.config.js
