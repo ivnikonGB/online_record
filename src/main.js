@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import "./assets/enter.css";
 
-import store from './store'
-import Axios from 'axios'
+import store from './store';
+import Axios from 'axios';
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
