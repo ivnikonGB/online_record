@@ -24,6 +24,7 @@ app.use(
   app.use(passport.initialize());
   app.use(passport.session());   
 //---
+
 const allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', '*');
@@ -32,6 +33,7 @@ const allowCrossDomain = function(req, res, next) {
 };
 
 app.use(allowCrossDomain);
+
 app.get("/api/v1", async (req, res) => {
   res.json({ message: "API v1" });
 });
