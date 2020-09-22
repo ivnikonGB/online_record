@@ -1,10 +1,11 @@
-//file version 1.1.0
+//file version 1.1.1
 const Customer = require('../models/user.model');
 const {CustomerSession, UserProfile, MasterProfile, MasterProfileJobs, CustomerNewPasswor} = require('../models/profile.model');
+const {NewOrder, GetOrder} = require('../models/order.model');
 const { UI } = require('../config/server.config');
 
 //new user
-exports.newUser = (req, res) => {
+exports.newUser = async (req, res) => {
   const customer = new Customer({
     email: req.body.email,
     pwd: req.body.pwd,
@@ -12,7 +13,7 @@ exports.newUser = (req, res) => {
   });
   
   //create user
-  Customer.create(customer, (err, data) => {
+ await Customer.create(customer, (err, data) => {
     if (err){
       if(err.message.includes('Duplicate entry')){
         res.status(400).send({ message: "User already exist"});
@@ -60,8 +61,8 @@ exports.getCategory = async (req, res) => {
 };
 
 //master info card
-exports.findOne = (req, res) => {
-  Customer.findById(req.params.customerId, (err, data) => {
+exports.findOne = async (req, res) => {
+  await Customer.findById(req.params.customerId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -92,14 +93,14 @@ exports.getCitys = async (req, res) => {
 };
 
 
-exports.getCustomerProfile = (req, res) => {
+exports.getCustomerProfile = async (req, res) => {
   const getsession = new CustomerSession({
     id: req.session.passport.user.id,
     role: req.session.passport.user.role
   });
 
   //get user profile
-  CustomerSession.getProfile(getsession, (err, data) => {
+  await CustomerSession.getProfile(getsession, (err, data) => {
     if (err){
       res.status(500).send({
         message:
@@ -111,7 +112,7 @@ exports.getCustomerProfile = (req, res) => {
   });
 };
 
-exports.updateUserProfile = (req, res) => {
+exports.updateUserProfile = async (req, res) => {
   const userProfile = new UserProfile({
     id: req.session.passport.user.id,
     role: req.session.passport.user.role,
@@ -119,9 +120,9 @@ exports.updateUserProfile = (req, res) => {
     lastname: req.body.lastname,
     city_id: req.body.city_id
   });
-console.log('Conoller UserProfile', userProfile);
+
   //get user profile
-  UserProfile.updateUser(userProfile, (err, data) => {
+  await UserProfile.updateUser(userProfile, (err, data) => {
     if (err){
       res.status(500).send({
         message:
@@ -133,7 +134,7 @@ console.log('Conoller UserProfile', userProfile);
   });
 };
 
-exports.updateMasterProfile = (req, res) => {
+exports.updateMasterProfile = async (req, res) => {
   const masterProfile = new MasterProfile({
     id: req.session.passport.user.id,
     role: req.session.passport.user.role,
@@ -147,9 +148,9 @@ exports.updateMasterProfile = (req, res) => {
     info: req.body.info//,
     //photo: req.body.photo
   });
-console.log('Conoller UserProfile', masterProfile);
+
   //get master profile
-  MasterProfile.updateMaster(masterProfile, (err, data) => {
+  await MasterProfile.updateMaster(masterProfile, (err, data) => {
     if (err){
       res.status(500).send({
         message:
@@ -161,14 +162,14 @@ console.log('Conoller UserProfile', masterProfile);
   });
 };
 
-exports.updateMasterProfileJobs = (req, res) => {
+exports.updateMasterProfileJobs = async (req, res) => {
   const masterProfileJobs = new MasterProfileJobs({
     id: req.session.passport.user.id,
     role: req.session.passport.user.role,
     jobs: req.body.jobs
   });
   //get master profile
-  MasterProfileJobs.updateMasterJobs(masterProfileJobs, (err, data) => {
+ await MasterProfileJobs.updateMasterJobs(masterProfileJobs, (err, data) => {
     if (err){
       res.status(500).send({
         message:
@@ -180,7 +181,7 @@ exports.updateMasterProfileJobs = (req, res) => {
   });
 };
 
-exports.resetPwd = (req, res) => {
+exports.resetPwd = async (req, res) => {
   const customerNewPasswor = new CustomerNewPasswor({
     session_id: req.session.passport.user.id,
     session_role: req.session.passport.user.role,
@@ -191,7 +192,7 @@ exports.resetPwd = (req, res) => {
     newpwd2: req.body.newpwd2
   });
   //get master profile
-  CustomerNewPasswor.resetCustomerPassword(customerNewPasswor, (err, data) => {
+  await CustomerNewPasswor.resetCustomerPassword(customerNewPasswor, (err, data) => {
     if (err){
       res.status(500).send({
         message:
@@ -202,4 +203,51 @@ exports.resetPwd = (req, res) => {
   }
   });
 };
+//new order
+exports.newOrder = async (req, res) => {
 
+  const customerNewOrder = new NewOrder({
+    session_id: req.session.passport.user.id,
+    //session_role: req.session.passport.user.role,
+    userid: req.body.userid,
+    masterid: req.body.masterid,
+    jobid: req.body.jobid,
+    date: req.body.date,
+    comment: req.body.comment
+  });
+
+  //get master profile
+   await NewOrder.createNewOrder(customerNewOrder, (err, data) => {
+    if (err){
+      res.status(500).send({
+        message:
+          err.message || "error"
+      })
+    } else {
+      res.status(201).json(data); 
+  }
+  });
+};
+
+//get order
+exports.getOrders = (req, res) => {
+  
+  const getCustomersOrders = new GetOrder({
+    session_id: req.session.passport.user.id,
+    session_role: req.session.passport.user.role,
+    date: req.body.date,
+    start_date: req.body.start_date,
+    end_date: req.body.end_date
+  });
+
+    GetOrder.getCustomersOrders(getCustomersOrders, (err, data) => {
+    if (err){
+      res.status(500).send({
+        message:
+          err.message || "error"
+      })
+    } else {
+      res.status(200).json(data); 
+  }
+  });
+};
