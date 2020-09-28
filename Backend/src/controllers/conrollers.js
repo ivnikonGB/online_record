@@ -1,7 +1,7 @@
-//file version 1.1.1
+//file version 1.1.2
 const Customer = require('../models/user.model');
 const {CustomerSession, UserProfile, MasterProfile, MasterProfileJobs, CustomerNewPasswor} = require('../models/profile.model');
-const {NewOrder, GetOrder} = require('../models/order.model');
+const {NewOrder, GetOrder, GetOrderById, UpdateOrderById} = require('../models/order.model');
 const { UI } = require('../config/server.config');
 
 //new user
@@ -251,3 +251,61 @@ exports.getOrders = (req, res) => {
   }
   });
 };
+
+exports.getOrderById = (req, res) => {
+  
+  const getOrderById = new GetOrderById({
+    session_id: req.session.passport.user.id,
+    session_role: req.session.passport.user.role,
+    orderid: req.params.orderId
+  });
+
+   GetOrderById.getOrder(getOrderById, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Order with id ${req.params.orderId}.`
+        });
+        return;
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Order with id " + req.params.orderId
+        });
+        return;
+      };
+    } else {
+        res.send(data)};
+  });
+};
+
+// exports.updateOrderById = (req, res) => {
+  
+//   const updateOrderById = new UpdateOrderById({
+//     session_id: req.session.passport.user.id,
+//     session_role: req.session.passport.user.role,
+//     orderid: req.params.orderId,
+//     status_id: req.body.status_id,
+//     job_date: req.body.job_date,
+//     comment: req.body.comment
+//   });
+
+//   UpdateOrderById.updateOrder(updateOrderById,(err, data) => {
+//     if (err) {
+//       if (err.kind === "not_found") {
+//         res.status(404).send({
+//           message: `Not found Order with id ${req.params.orderId}.`
+//         });
+//         return;
+//       } else {
+//         res.status(500).send({
+//           message: "Error retrieving Order with id " + req.params.orderId
+//         });
+//         return;
+//       };
+//     } else {
+//         //res.send(data)
+//         res.sendStatus(201);
+//       };
+//   });
+// };
+

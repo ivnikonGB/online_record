@@ -1,4 +1,4 @@
-//file version 1.1.1
+//file version 1.1.2
 const LocalStrategy = require('passport-local').Strategy;
 const bcryptjs = require('bcryptjs');
 const sql = require('../models/db');

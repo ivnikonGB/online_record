@@ -1,4 +1,4 @@
-//file version 1.1.0
+//file version 1.1.2
 const sql = require('./db');
 const bcryptjs = require('bcryptjs');
 const { DEBUG } = require('../config/server.config');
