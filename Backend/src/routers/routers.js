@@ -1,6 +1,6 @@
-//file version 1.1.0
+//file version 1.1.2
 const passport = require('passport');
-const { UI } = require('../config/server.config');
+const { UI, DEBUG } = require('../config/server.config');
 const path = require('path');
 
 //validate Empty JSON
@@ -16,6 +16,7 @@ const validateEmptyJSON = (req, res, next) => {
 };
 
 module.exports = app => {
+  
   const customers = require("../controllers/conrollers");
   function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -23,7 +24,9 @@ module.exports = app => {
     }
     if(UI){
       res.redirect('/api/v1/login');
+      if (DEBUG) console.log(`[Authorize-Check-Module] - User Unauthorized`);
     } else{
+      if (DEBUG) console.log(`[Authorize-Check-Module] - User Unauthorized`);
       res.status(401).json({ message: "Unauthorized" }); 
     };   
   };
@@ -32,12 +35,12 @@ module.exports = app => {
     if (req.isAuthenticated()) {
       if(UI){
         res.redirect('/api/v1/index');
-      } else{
-        res.status(401).json({ message: "Unauthorized" }); 
-      };  
+      };
+      if (DEBUG) console.log(`[Authorize-Check-Module] - User authorized`);
       return;
     }
-    next()
+    if (DEBUG) console.log(`[Authorize-Check-Module] - User Unauthorized`);
+    next();
   };
 
   // Authentication
@@ -143,5 +146,18 @@ module.exports = app => {
 
   //citys list
   app.get("/api/v1/citys", checkAuthenticated, customers.getCitys);
+//Orders
+//newOrder
+app.post("/api/v1/order/new",checkAuthenticated , customers.newOrder);
+
+//get Defautl orders
+app.get("/api/v1/order", checkAuthenticated,  customers.getOrders);
+//get orders by dates
+app.post("/api/v1/order", checkAuthenticated,  customers.getOrders);
+
+//get orders by id
+app.get("/api/v1/order/:orderId",checkAuthenticated, customers.getOrderById);
+//update orders by id
+//app.put("/api/v1/order/:orderId",checkAuthenticated, customers.updateOrderById);
 };
 
