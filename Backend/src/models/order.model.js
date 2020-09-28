@@ -1,6 +1,7 @@
-//file version 1.1.1
+//file version 1.1.2
 const sql = require('./db');
 const moment = require("moment");
+const mysql = require('mysql2');
 const { DEBUG } = require('../config/server.config');
 
 const NewOrder = function(newOrder) {
@@ -26,6 +27,28 @@ const GetOrder = function(getOrder) {
         };   
     };
 };
+
+const GetOrderById = function(getOrderByid){
+    this.session_id = getOrderByid.session_id;
+    this.session_role = getOrderByid.session_role;
+    this.orderid = getOrderByid.orderid;    
+};
+
+// const UpdateOrderById = function(updateOrderByid){
+//     this.session_id = updateOrderByid.session_id;
+//     this.session_role = updateOrderByid.session_role;
+//     this.orderid = updateOrderByid.orderid;
+//     this.query = {};
+//     if(updateOrderByid.status_id){
+//         this.query.status_id = updateOrderByid.status_id;
+//     };
+//     if(updateOrderByid.job_date){
+//         this.query.job_date = updateOrderByid.job_date;
+//     };
+//     if(updateOrderByid.comment){
+//         this.query.comment = updateOrderByid.comment;
+//     };
+// }
 
 //new order
 NewOrder.createNewOrder = async (newOrderRequest, result) => {
@@ -60,7 +83,6 @@ NewOrder.createNewOrder = async (newOrderRequest, result) => {
          return;
      };
 };
-
 
 GetOrder.getCustomersOrders = async (getOrdersRequest, result) => {
     if (DEBUG) console.log(`[Get-Order-Module] - Recive get order data:`,getOrdersRequest);
@@ -130,6 +152,108 @@ GetOrder.getCustomersOrders = async (getOrdersRequest, result) => {
         result({ sqlerror: e}, null);
         return;
     };
-  };
+};
 
-module.exports = {NewOrder, GetOrder};
+GetOrderById.getOrder = async(getOrderRequest, result) =>{
+    if (DEBUG) console.log(`[Get-OrderById-Module] - Recive Role = ${getOrderRequest.session_role} CustomerID = ${getOrderRequest.session_id} OrderID = ${getOrderRequest.orderid}`);
+    try{ 
+        //if master
+        if(getOrderRequest.session_role){
+            if (DEBUG) console.log(`[Get-OrderById-Module] - Current customer is Master`);
+            const [masterOrder,fields] = await sql.promisePool.query(`SELECT orders.id,users.firstname As firstname, users.lastname AS lastname,statuses.title AS 'status',create_date,accept_date,finish_date,joblist.title,job_date,'comment' FROM orders LEFT JOIN users ON (orders.user_id=users.id) LEFT JOIN statuses ON (orders.status_id=statuses.id) LEFT JOIN joblist ON (orders.job_id=joblist.id)where orders.id = '${getOrderRequest.orderid}' AND orders.master_id = '${getOrderRequest.session_id}';`);
+            if(masterOrder[0]){
+                if (DEBUG) console.log(`[Get-OrderById-Module] - Order found, see JSON result`);
+                result(null, masterOrder[0]);
+                return;
+            };
+            if (DEBUG) console.log(`[Get-OrderById-Module] - Order: ${getOrderRequest.orderid} not found`);
+            result({ kind: "not_found"}, null);
+            return;
+        };
+        //then user
+        if (DEBUG) console.log(`[Get-OrderById-Module] - Current customer is User`);
+        const [userOrder,fields] = await sql.promisePool.query(`SELECT orders.id,masters.firstname As firstname, masters.lastname AS lastname,statuses.title AS 'status',create_date,accept_date,finish_date,joblist.title,job_date,'comment' FROM orders LEFT JOIN masters ON (orders.master_id=masters.id) LEFT JOIN statuses ON (orders.status_id=statuses.id) LEFT JOIN joblist ON (orders.job_id=joblist.id)where orders.id = '${getOrderRequest.orderid}' AND orders.user_id = '${getOrderRequest.session_id}';`);
+        if(userOrder[0]){
+            if (DEBUG) console.log(`[Get-OrderById-Module] - Order found, see JSON result`);
+            result(null, userOrder[0]);
+            return;
+        };
+        if (DEBUG) console.log(`[Get-OrderById-Module] - Order: ${getOrderRequest.orderid} not found`);
+        result({ kind: "not_found"}, null);
+        return;
+        
+    } catch(e) {
+        if (DEBUG) console.log(`[Get-OrderById-Module] - SQL Error:`);
+        if (DEBUG) console.log(e);
+        result("sqlerror", null);
+        return;
+    };
+};
+
+
+// UpdateOrderById.updateOrder = async(updateOrderRequest, result) =>{
+//     if (DEBUG) console.log(`[Update-OrderById-Module] - Recive DATA: UserRole = ${updateOrderRequest.session_role}, UserId = ${updateOrderRequest.session_id}, status_id = ${updateOrderRequest.query.status_id}, job_date = ${updateOrderRequest.query.job_date}, comment = ${updateOrderRequest.query.comment};`);
+//     //build sql query
+//     let sqlrow = "UPDATE orders SET ? WHERE `id` = ?;";
+//     let inserts = [updateOrderRequest.query, updateOrderRequest.orderid];
+//     sqlrow = mysql.format(sqlrow, inserts);
+//     if (DEBUG) console.log(`[Update-OrderById-Module] - MySQL Query with values: ${sqlrow}`);
+  
+//     // console.log(`sql `, sqlrow);
+//     // const [masterOrder,fields] = await sql.promisePool.query(sqlrow);
+//     // console.log(masterOrder.changedRows);
+    
+//     try{ 
+//         //if master
+//         if(updateOrderRequest.session_role){
+//             if (DEBUG) console.log(`[Update-OrderById-Module] - Current customer is Master`);
+//             const [masterOrder,fields] = await sql.promisePool.query(sqlrow);
+//             if(masterOrder.changedRows){
+//                 if (DEBUG) console.log(`[Update-OrderById-Module] - Order found, see JSON result`);
+//                 result(null, 'ok');
+//                 return;
+//             };
+//             if (DEBUG) console.log(`[Update-OrderById-Module] - Order: ${updateOrderRequest.orderid} not found`);
+//             result({ kind: "not_found"}, null);
+//             return;
+//         };
+//         //then user
+//         // if (DEBUG) console.log(`[Update-OrderById-Module] - Current customer is User`);
+//         // if(updateOrderRequest.query.status_id == 6){
+//         //     console.log(typeof updateOrderRequest.query.status_id);
+//         // }
+//         // //build sql query
+//         // let sqlrow = "UPDATE orders SET ? WHERE `id` = ?;";
+//         // let inserts = [updateOrderRequest.query, updateOrderRequest.orderid];
+//         // sqlrow = mysql.format(sqlrow, inserts);
+//         // if (DEBUG) console.log(`[Update-OrderById-Module] - MySQL Query with values: ${sqlrow}`);
+
+//         // const [userOrder,fields] = await sql.promisePool.query(sqlrow);
+//         //     if(userOrder.changedRows){
+//         //         if (DEBUG) console.log(`[Update-OrderById-Module] - Order found, see JSON result`);
+//         //         result(null, 'ok');
+//         //         return;
+//         //     };
+//         //     if (DEBUG) console.log(`[Update-OrderById-Module] - Order: ${updateOrderRequest.orderid} not found`);
+//         //     result({ kind: "not_found"}, null);
+//         //     return;
+
+//         // const [userOrder,fields] = await sql.promisePool.query(`SELECT orders.id,masters.firstname As firstname, masters.lastname AS lastname,statuses.title AS 'status',create_date,accept_date,finish_date,joblist.title,job_date,'comment' FROM orders LEFT JOIN masters ON (orders.master_id=masters.id) LEFT JOIN statuses ON (orders.status_id=statuses.id) LEFT JOIN joblist ON (orders.job_id=joblist.id)where orders.id = '${getOrderRequest.orderid}' AND orders.user_id = '${getOrderRequest.session_id}';`);
+//         // if(userOrder[0]){
+//         //     if (DEBUG) console.log(`[Update-OrderById-Module] - Order found, see JSON result`);
+//         //     result(null, userOrder[0]);
+//         //     return;
+//         // };
+//         // if (DEBUG) console.log(`[Update-OrderById-Module] - Order: ${getOrderRequest.orderid} not found`);
+//         // result({ kind: "not_found"}, null);
+//         // return;
+        
+//     } catch(e) {
+//         if (DEBUG) console.log(`[Update-OrderById-Module] - SQL Error:`);
+//         if (DEBUG) console.log(e);
+//         result("sqlerror", null);
+//         return;
+//     };
+// };
+//module.exports = {NewOrder, GetOrder, GetOrderById, UpdateOrderById};
+module.exports = {NewOrder, GetOrder, GetOrderById};

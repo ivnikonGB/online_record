@@ -1,4 +1,4 @@
-//file version 1.1.1
+//file version 1.1.2
 const passport = require('passport');
 const { UI, DEBUG } = require('../config/server.config');
 const path = require('path');
@@ -154,5 +154,10 @@ app.post("/api/v1/order/new",checkAuthenticated , customers.newOrder);
 app.get("/api/v1/order", checkAuthenticated,  customers.getOrders);
 //get orders by dates
 app.post("/api/v1/order", checkAuthenticated,  customers.getOrders);
+
+//get orders by id
+app.get("/api/v1/order/:orderId",checkAuthenticated, customers.getOrderById);
+//update orders by id
+//app.put("/api/v1/order/:orderId",checkAuthenticated, customers.updateOrderById);
 };
 
