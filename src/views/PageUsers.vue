@@ -25,14 +25,13 @@
                 <div class="photo col-sm-12 col-lg-4 ">
                     <img :src="photo_url" alt="user" class="img-circle">
                 </div>
-                <div class="profile col-sm-12 col-lg-8 " >
+                <div class="profile col-sm-12 col-lg-8 ">
                     <div class="profile-info">
                         <h1 >{{ fullname }}</h1>
                         <p><strong>Почта: </strong> {{userDetail.email}} </p>
                         <p><strong>Телефон: </strong> {{userDetail.phone}} </p>
-                        <p><strong>Город: </strong> {{ getCity }} </p>
                     </div>
-                </div>                                   
+                </div>                                  
             </div>
         </div>
         <div class="record">
@@ -40,24 +39,28 @@
         </div>  
         <div class="frame-1">
             <div class="table-responsive-lg">
-                <table class="table table-hover" >
+                <!-- <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Вид услуги</th>
+                            <th>#</th>
                             <th>Специалист</th>
-                            <th>Комментарий</th>
+                            <th>ФИО</th>
+                            <th>Вид услуги</th>
+                            <th>Время</th>
                             <th>Дата</th>
                         </tr>
                     </thead>
-                    <tbody v-for="item in order" :key="item.id">
+                    <tbody>
                         <tr>
-                            <td>{{ item.job_title }}</td>
-                            <td>{{ item.firstname }} {{ item.lastname }}</td>
-                            <td>{{ item.comment }}</td>
-                            <td>{{ item.job_date }}</td>
+                            <th scope="row">1</th>
+                            <td>Парикмахер</td>
+                            <td>Петров П.П.</td>
+                            <td>Стрижка</td>
+                            <td>19:30</td>
+                            <td>20.12.20</td>
                         </tr>         
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </div>           
     </main>
@@ -81,37 +84,14 @@
 <script>
 export default {
     data: () => ({
-        // orderInfo: null,
+        userInfo: null,
         userDetail: null,
-        orderDetail: null,
         loaded: false,
-        photo_url: "https://bootdey.com/img/Content/avatar/avatar6.png",
-        city: [],
-        order: [],
-        urlAPIcity: '/api/citys',
-        urlAPIorder: '/api/order',
+        photo_url: "https://bootdey.com/img/Content/avatar/avatar6.png"
     }),
-    methods: {
-        getJSON (url) {
-            return fetch(url)
-            .then(d => d.json())
-        },
-    },
     async mounted() {
         this.userDetail = await fetch("/api/profile").then(d => d.json());
-        // console.log(this.userDetail.firstname)
         this.loaded = true;
-        this.getJSON(this.urlAPIcity)
-            .then(data => {
-                // console.log(data)
-                this.city = data
-                // console.log(this.city)
-            });
-        this.getJSON(this.urlAPIorder)
-            .then(data => {
-                console.log(data)
-                this.order = data
-            });
     },
     computed:{
         fullname: {
@@ -123,18 +103,7 @@ export default {
                 this.userDetail.firstname = names[0]
                 this.userDetail.lastname = names[names.length - 1]
             }
-        },
-        getCity: function () {
-            for(let index = 0; index < this.city.length; index++) {
-                for(let item = 0; item < index; item++) {
-                    if(item == this.userDetail.city_id){
-                        // console.log(this.city[item - 1].city);
-                        return this.city[item - 1].city;
-                    }
-                }
-            }
-        },
-    },
-    
+        }
+    }
 }
 </script>
