@@ -1,7 +1,8 @@
 //file version 1.1.2
 const Customer = require('../models/user.model');
 const {CustomerSession, UserProfile, MasterProfile, MasterProfileJobs, CustomerNewPasswor} = require('../models/profile.model');
-const {NewOrder, GetOrder, GetOrderById, UpdateOrderById} = require('../models/order.model');
+//const {NewOrder, GetOrder, GetOrderById, UpdateOrderById} = require('../models/order.model');
+const {NewOrder, GetOrder, GetOrderById} = require('../models/order.model');
 const { UI } = require('../config/server.config');
 
 //new user
